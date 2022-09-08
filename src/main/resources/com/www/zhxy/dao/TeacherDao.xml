@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.zhxy.dao.TeacherDao">
+    <sql id="teacherQueryAll">
+        select *
+        from zhxy.tb_teacher
+    </sql>
+    <sql id="likeQuery">
+        <where>
+            <if test="teacher.clazzName!=null and teacher.clazzName!=''">
+                and clazz_name = #{teacher.clazzName}
+            </if>
+            <if test="teacher.name!=null and teacher.name!=''">
+                and `name` like '%' #{teacher.name} '%'
+            </if>
+        </where>
+    </sql>
+    <select id="login" resultType="com.www.zhxy.entity.Teacher">
+        <include refid="teacherQueryAll"/>
+        where `name` = #{loginForm.username}
+        and `password` = #{loginForm.password};
+    </select>
+    <select id="getByTeacherById" resultType="com.www.zhxy.entity.Teacher">
+        <include refid="teacherQueryAll"/>
+        where id =
+        #{userId};
+    </select>
+    <select id="getTeacherCount" resultType="java.lang.Integer">
+        select count(*)
+        from zhxy.tb_teacher
+        <include refid="likeQuery"/>
+        ;
+    </select>
+    <select id="getTeacherByOpr" resultType="com.www.zhxy.entity.Teacher">
+        <include refid="teacherQueryAll"/>
+        <include refid="likeQuery"/>
+        limit #{pageNo},#{pageSize};
+    </select>
+</mapper>

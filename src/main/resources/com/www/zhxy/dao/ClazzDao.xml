@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.zhxy.dao.ClazzDao">
+    <sql id="clazzQuery">
+        select *
+        from zhxy.tb_clazz
+    </sql>
+    <sql id="likeQuery">
+        <where>
+            <if test="clazz.gradeName!=null and clazz.gradeName!=''">
+                and grade_name=#{clazz.gradeName}
+            </if>
+            <if test="clazz.name!=null and clazz.name!=''">
+                and `name` like '%' #{clazz.name} '%'
+            </if>
+        </where>
+    </sql>
+    <select id="getAllClazz" resultType="com.www.zhxy.entity.Clazz">
+        <include refid="clazzQuery"/>
+    </select>
+    <select id="getClazzCount" resultType="java.lang.Integer">
+        select count(*) from zhxy.tb_clazz
+        <include refid="likeQuery"/>
+    </select>
+    <select id="getClazzByOpr" resultType="com.www.zhxy.entity.Clazz">
+        <include refid="clazzQuery"/>
+        <include refid="likeQuery"/>
+        limit #{pageNo},#{pageSize}
+    </select>
+</mapper>
